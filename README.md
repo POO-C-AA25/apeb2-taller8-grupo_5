@@ -1,4 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/AQyXpTIM)
 Taller 8 - DOO e implementación de soluciones UML y Java, basados en Polimorfismo - GRUPAL
 Elaboración de ejercicios sobre Polimorfismo a través de Diagramas UML
 Elaboración de ejercicios mediante código haciendo uso del concepto de Polimorfismo en Programación Orientada a Objetos
