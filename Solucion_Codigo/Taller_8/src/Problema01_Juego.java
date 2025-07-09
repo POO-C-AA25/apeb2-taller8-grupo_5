@@ -10,20 +10,21 @@
  *Utilizando programación orientada a objetos, herencia y polimorfismo, implementa el sistema de combate y las clases necesarias para 
  *representar a los diferentes tipos de personajes. Asegúrate de que cada tipo de personaje tenga sus propias habilidades y métodos 
  *de ataque y defensa, y que puedan interactuar entre sí en las batallas.
- * @author erick
+ * @author  Erick Malla , Johan Wang
  */
-import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
-public class Problema01_Videojuego {
+public class Problema01_Juego {
     public static Scanner tcl = new Scanner (System.in);
+    public static Personaje p1 = iniciarP();
+    public static Personaje p2 = iniciarP();
+    public static int daño;
+    public static int atac;
+    public static int def;
     public static void main(String[] args) {
-        Personaje p1 = iniciarP();
-        Personaje p2 = iniciarP();
-        interfaz2(p1, p2);
+        estado(p1, p2);
         int distancia = distancia();
         batalla(p1, p2, distancia);
-        interfaz2(p1, p2);
+        estado(p1, p2);
     }
     public static Personaje iniciarP(){
         Personaje player;
@@ -50,48 +51,6 @@ public class Problema01_Videojuego {
         }
         return player;
     }
-    public static int menu(){
-        System.out.println("______________________________");
-        System.out.println("   K  A  L  -  D  R  O  G  O ");
-        System.out.println("------------------------------");
-        System.out.println("| 1. Iniciar nueva partida.   |");
-        System.out.println("| 2. Cargar partida           |");
-        System.out.println("| 3. Eliminar partida         |");
-        System.out.println("| 4. Salir                    |");
-        System.out.println("------------------------------");
-        int opc = tcl.nextInt();
-        return opc;
-    }
-    public static void opcion(int opc){
-        switch (opc) {
-            case 1:
-                System.out.println("Nombre de la partida: ");
-                String nomPar = tcl.next();
-                File archivo = new File( nomPar + ".txt");
-                try {
-                    if (archivo.createNewFile()) {
-                        System.out.println("Partida creada: " + archivo.getName());
-                    } else {
-                        System.out.println("La partida ya existe.");
-                    }
-                } catch (IOException e) {
-                    System.out.println("Ocurrió un error.");
-                    e.printStackTrace();
-                }
-                
-                break;
-            case 2:
-                
-                break;
-            case 3:
-                
-                break;
-            default:
-                throw new AssertionError();
-        }
- 
-    }  
-    
     public static void interPers(Personaje pers){
         if (pers instanceof Mago) {
             System.out.println("       /\\");
@@ -137,20 +96,9 @@ public class Problema01_Videojuego {
         return distancia;
     }
     public static void batalla(Personaje p1, Personaje p2,int distancia){
-        int atac;
-        int def;
-        int daño;
         do {            
-            atac = p1.ataque(distancia);
-            def = p2.defensa(distancia);
-            daño = atac - def;
-            p2.vida -= daño;
-            System.out.println(p1.nombre + " hace " + atac + " pts de daño : " + p2.nombre + " defiende " + def + " pts" + " : daño final " + daño);
-            atac = p2.ataque(distancia);
-            def = p1.defensa(distancia);
-            daño = atac - def;
-            p1.vida -= daño;
-            System.out.println(p2.nombre + " hace " + atac + " pts de daño : " + p1.nombre + " defiende " + def + " pts" + " : daño final " + daño);
+            progreso(p1, p2, distancia);
+            progreso(p2, p1, distancia);
             if (distancia > 0) {
                distancia -= 5;
             System.out.print("Acercamiento de 5 metros "); 
@@ -158,31 +106,42 @@ public class Problema01_Videojuego {
             distancia = (distancia < 0)? 0 : distancia;
             System.out.println("distancia : " + distancia + " metros");
         } while (p1.vida > 0 && p2.vida > 0); 
-        if (p1.vida <= 0) {
-            p2.nivel ++;
-            p1.nivel --;
-            System.out.println(p2.nombre + " ha ganado la batalla");
-            System.out.println("Nivel de exp aumentado en 1");
-            p1.vivo = false;
-        }else if (p2.vida <= 0) {
-            p1.nivel ++;
-            p2.nivel --;
-            System.out.println(p1.nombre + " ha ganado la batalla");
-            System.out.println("Nivel de exp aumentado en 1");
-            p2.vivo = false;
-        }
-    } 
-    
-    public static void interfaz2(Personaje p1, Personaje p2){
         p1.vida = (p1.vida > 0 )? p1.vida : 0 ;
         p2.vida = (p2.vida > 0 )? p2.vida : 0 ;
-        System.out.println("Player 1 " + p1.nombre);
-        System.out.println("vida: " + p1.vida);
-        System.out.println("Nivel de exp: " + p1.nivel);
+        if (p1.vida == 0 && p2.vida == 0) {
+            System.out.println("EMPATE");
+            p1.vivo = false; 
+            p2.vivo = false; 
+            return;
+        }else{
+            if (p1.vida <= 0) {
+                p2.nivel ++;
+                p1.nivel --;
+                System.out.println(p2.nombre + " ha ganado la batalla");
+                System.out.println("Nivel de exp aumentado en 1");
+                p1.vivo = false;
+            }
+            if (p2.vida <= 0) {
+                p1.nivel ++;
+                p2.nivel --;
+                System.out.println(p1.nombre + " ha ganado la batalla");
+                System.out.println("Nivel de exp aumentado en 1");
+                p2.vivo = false;
+            }
+        }
+    } 
+    public static void progreso(Personaje p1, Personaje p2, int distancia){
+        atac = p1.ataque(distancia);
+        def = p2.defensa(distancia);
+        daño = atac - def;
+        daño =(daño > 0)? daño : 0;
+        p1.vida -= daño;
+        System.out.println(p1.nombre + " hace " + atac + " pts de daño : " + p2.nombre + " defiende " + def + " pts" + " : daño final " + daño);
+    }
+    public static void estado(Personaje p1, Personaje p2){
+        System.out.println("Player 1 " + p1);
         interPers(p1);
-        System.out.println("Player 2 " + p2.nombre);
-        System.out.println("vida: " + p2.vida);
-        System.out.println("Nivel de exp: " + p2.nivel);
+        System.out.println("Player 2 " + p2);
         interPers(p2);
     }
     
@@ -222,7 +181,9 @@ class Guerrero extends Personaje{
         }else
             return 25;
     }
-    
+    public String toString() {
+        return "Personaje{" + " Nombre = " + this.nombre + ", nivel = " + this.nivel + ", vida = " + this.vida + '}';
+    }
 }
     
 class Mago extends Personaje{
@@ -250,6 +211,9 @@ class Mago extends Personaje{
         }else
             return 20;
     }
+    public String toString() {
+        return "Personaje{" + " Nombre = " + this.nombre + ", nivel = " + this.nivel + ", vida = " + this.vida + '}';
+    }
 }
 class Arquero extends Personaje{
     public Arquero (String nombre){
@@ -273,5 +237,8 @@ class Arquero extends Personaje{
             return 10;
         }else
             return 20;
+    }
+    public String toString() {
+        return "Personaje{" + " Nombre = " + this.nombre + ", nivel = " + this.nivel + ", vida = " + this.vida + '}';
     }
 }
