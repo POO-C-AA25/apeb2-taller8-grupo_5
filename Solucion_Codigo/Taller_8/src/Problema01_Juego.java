@@ -119,7 +119,7 @@ public class Problema01_Juego {
                 p1.nivel --;
                 System.out.println(p2.nombre + " ha ganado la batalla");
                 System.out.println("Nivel de exp aumentado en 1");
-                p1.vivo = false;
+                p2.vivo = false;
             }
             if (p2.vida <= 0) {
                 p1.nivel ++;

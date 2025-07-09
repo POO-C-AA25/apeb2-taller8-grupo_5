@@ -1,4 +1,4 @@
-
+    
 /**
  * Problema 4 - Sistema de monitoreo de impactos del cambio climático en Ecuador
 Una red de monitoreo ambiental tiene como objetivo registrar, analizar y 
